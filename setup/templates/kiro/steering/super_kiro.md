@@ -20,6 +20,15 @@ This project organizes steering as:
   - Behavior: Treat the remainder of the message as arguments to the steering behavior.
 - Flags announcement: If global flags are present (e.g., `--ultrathink`), announce them immediately after the consulted line, e.g., `Applied flags: --ultrathink`.
 
+## Mandatory Output Header
+
+To prove the steering file was actually consulted, every response that uses a `#sk_<name>` command MUST begin with:
+
+1. `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+2. If any flags were provided, the next line: `Applied flags: <flags>` (omit if none)
+
+The `<name>` must match the invoked command (e.g., `document`, `analyze`, `implement`). Do not paraphrase or alter these two lines.
+
 ## Command Files
 
 Command files live under `.kiro/super_kiro/commands/` and are named `sk_<name>.md`.
