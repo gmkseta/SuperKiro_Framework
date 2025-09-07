@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_task.md [action] [target] [--strategy systematic|agile|enterprise] [--parallel] [--delegate]`. In responses, state: `Consulted .kiro/steering/commands/sk_task.md`.
+
 
 ---
 name: task

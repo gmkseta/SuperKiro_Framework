@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_business_panel.md [content_or_path] [flags...]` or `#sk_business_panel …`. State: `Consulted .kiro/steering/commands/sk_business_panel.md`.
+
 
 # #sk_business_panel - Business Panel Analysis System
 
@@ -85,4 +85,3 @@ Question-driven exploration for deep learning and strategic thinking development
 - Compatible with thinking flags (--think, --think-hard, --ultrathink)
 - Supports wave orchestration for comprehensive business analysis
 - Integrates with scribe persona for professional business communication
-

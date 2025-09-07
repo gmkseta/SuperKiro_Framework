@@ -1,7 +1,7 @@
 """
 Kiro Steering Initializer
 
-Adds `.kiro/steering` templates into a target directory.
+Adds `.kiro/steering/super_kiro.md` and `.kiro/super_kiro/commands/*` into a target directory.
 
 Usage (via SuperKiro CLI):
   SuperKiro kiro-init [target_dir] [--force]
@@ -21,18 +21,18 @@ from ...utils.ui import display_info, display_success, display_warning, display_
 def register_parser(subparsers, global_parser=None) -> argparse.ArgumentParser:
     parser = subparsers.add_parser(
         "kiro-init",
-        help="Initialize .kiro/steering templates in a directory",
+        help="Initialize Kiro steering in a directory (.kiro) — replaces existing managed files",
         parents=[global_parser] if global_parser else [],
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "Copy Kiro steering templates into the target directory.\n\n"
             "Examples:\n"
-            "  SuperKiro kiro-init                # install into current dir\n"
+            "  SuperKiro kiro-init                # install into current dir (overwrite managed files)\n"
             "  SuperKiro kiro-init ..             # install into parent dir\n"
             "  SuperKiro kiro-init ~              # treat ~ as workspace root (PWD)\n"
-            "  SuperKiro kiro-init . --force          # overwrite existing files\n"
-            "  SuperKiro kiro-init . --prune          # remove only SuperKiro template files\n"
-            "  SuperKiro kiro-init . --sync           # prune then re-copy latest templates\n"
+            "  SuperKiro kiro-init . --force      # overwrite existing files\n"
+            "  SuperKiro kiro-init . --prune      # remove SuperKiro-managed files (.kiro/steering/super_kiro.md and .kiro/super_kiro/*)\n"
+            "  SuperKiro kiro-init . --sync       # prune then re-copy latest templates\n"
         ),
     )
     parser.add_argument(
@@ -45,7 +45,7 @@ def register_parser(subparsers, global_parser=None) -> argparse.ArgumentParser:
     parser.add_argument(
         "--prune",
         action="store_true",
-        help="Remove only SuperKiro-managed steering templates from the target (.kiro/steering)"
+        help="Remove only SuperKiro-managed steering files from the target (.kiro/steering/super_kiro.md and .kiro/super_kiro)"
     )
     parser.add_argument(
         "--sync",
@@ -94,13 +94,27 @@ def _copy_templates(dest: Path, force: bool) -> Tuple[int, int]:
         display_error(f"Template source not found: {pkg_root}")
         return (0, 0)
 
-    dest.mkdir(parents=True, exist_ok=True)
+    # Destination layout:
+    # - .kiro/steering/super_kiro.md (top-level overview)
+    # - .kiro/super_kiro/commands/*.md (all command templates)
+    base_root = dest.parent  # .kiro
+    steering_dir = base_root / "steering"
+    commands_dir = base_root / "super_kiro" / "commands"
+    steering_dir.mkdir(parents=True, exist_ok=True)
+    commands_dir.mkdir(parents=True, exist_ok=True)
 
     written = 0
     skipped = 0
     for src in _iter_md_files(pkg_root):
         rel = src.relative_to(pkg_root)
-        dst = dest / rel.as_posix()
+        # Route files based on their location inside the template tree
+        if rel.parts[0] == "commands":
+            # commands/* -> .kiro/super_kiro/commands/*
+            subrel = Path(*rel.parts[1:]) if len(rel.parts) > 1 else Path()
+            dst = commands_dir / subrel.as_posix()
+        else:
+            # super_kiro.md (and any future top-level) -> .kiro/steering/
+            dst = steering_dir / rel.as_posix()
         dst.parent.mkdir(parents=True, exist_ok=True)
         if dst.exists() and not force:
             display_warning(f"[SKIP] {dst} exists (use --force to overwrite)")
@@ -131,15 +145,19 @@ def _prune_templates(dest: Path) -> Tuple[int, int]:
     removed = 0
     preserved = 0
 
-    # Build the set of relative template paths
-    rel_paths = [src.relative_to(pkg_root) for src in _iter_md_files(pkg_root)]
+    base_root = dest.parent  # .kiro
+    steering_dir = base_root / "steering"
+    commands_dir = base_root / "super_kiro" / "commands"
 
-    # Backward-compat: also prune legacy top-level files even if not present in current templates
-    legacy_top = [Path("super_kiro.md"), Path("_router.md"), Path("README.md")]  # historical files
-    rel_paths.extend(legacy_top)
+    # Build concrete target paths mapped from templates
+    for src in _iter_md_files(pkg_root):
+        rel = src.relative_to(pkg_root)
+        if rel.parts[0] == "commands":
+            subrel = Path(*rel.parts[1:]) if len(rel.parts) > 1 else Path()
+            target = commands_dir / subrel.as_posix()
+        else:
+            target = steering_dir / rel.as_posix()
 
-    for rel in rel_paths:
-        target = dest / rel.as_posix()
         try:
             if target.exists():
                 target.unlink()
@@ -150,13 +168,32 @@ def _prune_templates(dest: Path) -> Tuple[int, int]:
         except Exception as e:
             display_warning(f"Could not remove {target}: {e}")
 
-    # Clean up empty directories under dest that match our template structure
+    # Remove legacy steering commands directory if present
+    legacy_cmds = steering_dir / "commands"
     try:
-        # Remove empty 'commands' dir if empty
-        commands_dir = dest / "commands"
-        if commands_dir.exists() and not any(commands_dir.iterdir()):
+        if legacy_cmds.exists():
+            for p in legacy_cmds.rglob("*.md"):
+                try:
+                    p.unlink()
+                    display_info(f"[REMOVE] {p}")
+                    removed += 1
+                except Exception:
+                    pass
+            if not any(legacy_cmds.rglob("*")):
+                legacy_cmds.rmdir()
+                display_info(f"[REMOVE] {legacy_cmds} (empty)")
+    except Exception:
+        pass
+
+    # Clean up empty new-structure directories
+    try:
+        if commands_dir.exists() and not any(commands_dir.rglob("*")):
             commands_dir.rmdir()
             display_info(f"[REMOVE] {commands_dir} (empty)")
+        superkiro_dir = commands_dir.parent
+        if superkiro_dir.exists() and not any(superkiro_dir.rglob("*")):
+            superkiro_dir.rmdir()
+            display_info(f"[REMOVE] {superkiro_dir} (empty)")
     except Exception:
         pass
 
@@ -169,7 +206,8 @@ def run(args: argparse.Namespace) -> int:
     dest = target_root / ".kiro" / "steering"
 
     display_info(f"Initializing Kiro steering into: {dest}")
-    force = bool(getattr(args, "force", False))
+    # Default behavior: full replace of managed files
+    force = True
 
     # Prune-only mode
     if getattr(args, "prune", False) and not getattr(args, "sync", False):
@@ -184,7 +222,8 @@ def run(args: argparse.Namespace) -> int:
         display_success(f"Kiro steering sync complete: {written} written")
         return 0
 
-    # Default: copy templates
-    written, skipped = _copy_templates(dest, force=force)
-    display_success(f"Kiro steering init complete: {written} written, {skipped} skipped")
+    # Default: full replace (prune then copy)
+    _prune_templates(dest)
+    written, skipped = _copy_templates(dest, force=True)
+    display_success(f"Kiro steering init complete: {written} written (existing managed files replaced)")
     return 0

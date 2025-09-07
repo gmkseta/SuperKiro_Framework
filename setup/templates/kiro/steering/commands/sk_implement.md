@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_implement.md <feature-description> [--type component|api|service|feature] [--framework react|vue|express] [--safe] [--with-tests]`. In responses, state: `Consulted .kiro/steering/commands/sk_implement.md`.
+
 
 ---
 name: implement

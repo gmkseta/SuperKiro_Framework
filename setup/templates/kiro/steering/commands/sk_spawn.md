@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_spawn.md <complex-task> [--strategy sequential|parallel|adaptive] [--depth normal|deep]` or `#sk_spawn …`. State: `Consulted .kiro/steering/commands/sk_spawn.md`.
+
 
 # #sk_spawn - Meta-System Task Orchestration
 
@@ -46,4 +46,3 @@ Key behaviors:
 - Strategy Selection: Sequential (dependency-ordered) → Parallel (independent) → Adaptive (dynamic)
 - Meta-System Coordination: Cross-domain operations → resource optimization → result integration
 - Progressive Enhancement: Systematic execution → quality gates → comprehensive validation
-

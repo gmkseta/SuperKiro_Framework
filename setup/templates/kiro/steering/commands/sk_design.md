@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_design.md <target> [--type architecture|api|component|database] [--format diagram|spec|code]`. In responses, state: `Consulted .kiro/steering/commands/sk_design.md`.
+
 
 ---
 name: design

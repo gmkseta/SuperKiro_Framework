@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_analyze.md <target> [--focus quality|security|performance|architecture] [--depth quick|deep] [--format text|json|report]`. In responses, state: `Consulted .kiro/steering/commands/sk_analyze.md`.
+
 
 ---
 name: analyze

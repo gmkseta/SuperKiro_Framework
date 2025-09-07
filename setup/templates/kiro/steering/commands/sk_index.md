@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_index.md <target> [--type structure|api|docs] [--format md|json]`. In responses, state: `Consulted .kiro/steering/commands/sk_index.md`.
+
 
 ---
 name: index

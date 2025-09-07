@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_select_tool.md <operation> [--analyze] [--explain]`. In responses, state: `Consulted .kiro/steering/commands/sk_select_tool.md`.
+
 
 ---
 name: select-tool

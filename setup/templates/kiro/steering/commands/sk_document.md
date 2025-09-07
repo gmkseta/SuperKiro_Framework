@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_document.md <target> [--type inline|external|api|guide] [--style brief|detailed]`. In responses, state: `Consulted .kiro/steering/commands/sk_document.md`.
+
 
 ---
 name: document

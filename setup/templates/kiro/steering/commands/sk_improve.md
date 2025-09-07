@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_improve.md <target> [--type quality|performance|maintainability|style] [--safe] [--interactive]`. In responses, state: `Consulted .kiro/steering/commands/sk_improve.md`.
+
 
 ---
 name: improve

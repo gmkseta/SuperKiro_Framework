@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_save.md [--type session|learnings|context|all] [--summarize] [--checkpoint]` or `#sk_save …`. State: `Consulted .kiro/steering/commands/sk_save.md`.
+
 
 # #sk_save - Session Context Persistence
 
@@ -46,4 +46,3 @@ Key behaviors:
 - Cross-Session Learning: Context accumulation → pattern archival → enhanced project understanding
 - Progress Tracking: Task completion → automatic checkpoints → session continuity
 - Recovery Planning: State preservation → checkpoint validation → restoration readiness
-

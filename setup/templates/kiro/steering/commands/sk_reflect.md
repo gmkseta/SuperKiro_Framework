@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_reflect.md [--type task|session|completion] [--analyze] [--validate]`. In responses, state: `Consulted .kiro/steering/commands/sk_reflect.md`.
+
 
 ---
 name: reflect

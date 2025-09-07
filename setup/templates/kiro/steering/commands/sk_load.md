@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_load.md [target] [--type project|config|deps|checkpoint] [--refresh] [--analyze]` or `#sk_load …`. State: `Consulted .kiro/steering/commands/sk_load.md`.
+
 
 # #sk_load - Project Context Loading
 
@@ -46,4 +46,3 @@ Key behaviors:
 - Session Restoration: Checkpoint loading → context validation → workflow preparation
 - Memory Management: Cross-session persistence → context continuity → development efficiency
 - Performance Critical: Fast initialization → immediate productivity → session readiness
-

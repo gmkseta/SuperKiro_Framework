@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_troubleshoot.md [issue] [--type bug|build|performance|deployment] [--trace] [--fix]`. In responses, state: `Consulted .kiro/steering/commands/sk_troubleshoot.md`.
+
 
 ---
 name: troubleshoot

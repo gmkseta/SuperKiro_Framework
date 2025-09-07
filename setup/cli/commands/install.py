@@ -46,9 +46,9 @@ Examples:
   SuperKiro install --verbose --force        # Verbose with force mode
   
   # Steering templates alias (kiro-init)
-  SuperKiro install . --force                # Copy .kiro/steering templates into current dir
-  SuperKiro install . --prune                # Remove only SuperKiro-managed steering templates
-  SuperKiro install . --sync                 # Prune then copy latest templates
+  SuperKiro install . --force                # Copy (and overwrite) .kiro/steering/super_kiro.md and .kiro/super_kiro/commands/*
+  SuperKiro install . --prune                # Remove only SuperKiro-managed steering files
+  SuperKiro install . --sync                 # Prune then copy latest templates (migrates legacy layout)
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         parents=parents
@@ -86,14 +86,14 @@ Examples:
         "target_dir",
         nargs="?",
         default=".",
-        help="Target directory for .kiro/steering (alias of kiro-init)"
+        help="Target directory for .kiro steering & commands (alias of kiro-init)"
     )
 
     # Steering template maintenance flags (alias of kiro-init)
     parser.add_argument(
         "--prune",
         action="store_true",
-        help="Remove only SuperKiro-managed steering templates from the target (.kiro/steering)"
+        help="Remove only SuperKiro-managed steering files from the target (.kiro/steering/super_kiro.md and .kiro/super_kiro)"
     )
     parser.add_argument(
         "--sync",

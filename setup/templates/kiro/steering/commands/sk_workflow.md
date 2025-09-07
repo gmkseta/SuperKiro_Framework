@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_workflow.md [prd-file|feature-description] [--strategy systematic|agile|enterprise] [--depth shallow|normal|deep] [--parallel]`. In responses, state: `Consulted .kiro/steering/commands/sk_workflow.md`.
+
 
 ---
 name: workflow

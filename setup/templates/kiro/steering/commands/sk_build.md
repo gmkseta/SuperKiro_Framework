@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_build.md [target] [--type dev|prod|test] [--clean] [--optimize] [--verbose]`. In responses, state: `Consulted .kiro/steering/commands/sk_build.md`.
+
 
 ---
 name: build

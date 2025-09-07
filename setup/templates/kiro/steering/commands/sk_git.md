@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_git.md <operation> [--smart-commit] [--interactive]`. In responses, state: `Consulted .kiro/steering/commands/sk_git.md`.
+
 
 ---
 name: git

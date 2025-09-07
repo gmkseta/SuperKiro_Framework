@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_cleanup.md <target> [--type code|imports|files|all] [--safe|--aggressive] [--interactive]`. In responses, state: `Consulted .kiro/steering/commands/sk_cleanup.md`.
+
 
 ---
 name: cleanup

@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_explain.md <target> [--level basic|intermediate|advanced] [--format text|examples|interactive] [--context domain]`. In responses, state: `Consulted .kiro/steering/commands/sk_explain.md`.
+
 
 ---
 name: explain

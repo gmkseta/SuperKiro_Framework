@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_brainstorm.md [topic/idea] [--strategy systematic|agile|enterprise] [--depth shallow|normal|deep] [--parallel]`. In responses, state: `Consulted .kiro/steering/commands/sk_brainstorm.md`.
+
 
 ---
 name: brainstorm

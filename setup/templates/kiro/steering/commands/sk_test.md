@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_test.md [target] [--type unit|integration|e2e|all] [--coverage] [--watch] [--fix]`. In responses, state: `Consulted .kiro/steering/commands/sk_test.md`.
+
 
 ---
 name: test

@@ -2,7 +2,7 @@
 inclusion: manual
 ---
 
-Note (Kiro): Use `.kiro/steering/commands/sk_estimate.md <target> [--type time|effort|complexity] [--unit hours|days|weeks] [--breakdown]`. In responses, state: `Consulted .kiro/steering/commands/sk_estimate.md`.
+
 
 ---
 name: estimate
