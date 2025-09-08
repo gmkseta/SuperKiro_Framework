@@ -33,6 +33,8 @@ def register_parser(subparsers, global_parser=None) -> argparse.ArgumentParser:
             "  SuperKiro kiro-init . --force      # overwrite existing files\n"
             "  SuperKiro kiro-init . --prune      # remove SuperKiro-managed files (.kiro/steering/super_kiro.md and .kiro/super_kiro/*)\n"
             "  SuperKiro kiro-init . --sync       # prune then re-copy latest templates\n"
+            "  SuperKiro kiro-init . --only-commands   # install command templates only (super_kiro.md always included)\n"
+            "  SuperKiro kiro-init . --only-agents     # install agent persona templates only (super_kiro.md always included)\n"
         ),
     )
     parser.add_argument(
@@ -51,6 +53,16 @@ def register_parser(subparsers, global_parser=None) -> argparse.ArgumentParser:
         "--sync",
         action="store_true",
         help="Prune SuperKiro-managed templates then copy the latest templates"
+    )
+    parser.add_argument(
+        "--only-commands",
+        action="store_true",
+        help="Install only command templates (.kiro/super_kiro/commands); super_kiro.md always included"
+    )
+    parser.add_argument(
+        "--only-agents",
+        action="store_true",
+        help="Install only agent persona templates (.kiro/steering/sk_*.md); super_kiro.md always included"
     )
     return parser
 
@@ -84,7 +96,7 @@ def _iter_md_files(base: Path):
             continue
 
 
-def _copy_templates(dest: Path, force: bool) -> Tuple[int, int]:
+def _copy_templates(dest: Path, force: bool, *, only_commands: bool = False, only_agents: bool = False) -> Tuple[int, int]:
     """Copy steering templates from package data to destination.
 
     Returns (written_count, skipped_count).
@@ -107,8 +119,20 @@ def _copy_templates(dest: Path, force: bool) -> Tuple[int, int]:
     skipped = 0
     for src in _iter_md_files(pkg_root):
         rel = src.relative_to(pkg_root)
+        # Categorize
+        is_super = (rel.as_posix() == "super_kiro.md")
+        is_command = (len(rel.parts) > 0 and rel.parts[0] == "commands")
+        is_agent = (not is_command and not is_super)
+
+        # Filter by requested categories (super_kiro.md is always included)
+        if not is_super:
+            if only_commands and not is_command:
+                continue
+            if only_agents and not is_agent:
+                continue
+
         # Route files based on their location inside the template tree
-        if rel.parts[0] == "commands":
+        if is_command:
             # commands/* -> .kiro/super_kiro/commands/*
             subrel = Path(*rel.parts[1:]) if len(rel.parts) > 1 else Path()
             dst = commands_dir / subrel.as_posix()
@@ -168,23 +192,6 @@ def _prune_templates(dest: Path) -> Tuple[int, int]:
         except Exception as e:
             display_warning(f"Could not remove {target}: {e}")
 
-    # Remove legacy steering commands directory if present
-    legacy_cmds = steering_dir / "commands"
-    try:
-        if legacy_cmds.exists():
-            for p in legacy_cmds.rglob("*.md"):
-                try:
-                    p.unlink()
-                    display_info(f"[REMOVE] {p}")
-                    removed += 1
-                except Exception:
-                    pass
-            if not any(legacy_cmds.rglob("*")):
-                legacy_cmds.rmdir()
-                display_info(f"[REMOVE] {legacy_cmds} (empty)")
-    except Exception:
-        pass
-
     # Clean up empty new-structure directories
     try:
         if commands_dir.exists() and not any(commands_dir.rglob("*")):
@@ -217,13 +224,17 @@ def run(args: argparse.Namespace) -> int:
 
     # Sync mode: prune then copy latest
     if getattr(args, "sync", False):
+        only_commands = bool(getattr(args, "only_commands", False))
+        only_agents = bool(getattr(args, "only_agents", False))
         _prune_templates(dest)
-        written, skipped = _copy_templates(dest, force=True)
+        written, skipped = _copy_templates(dest, force=True, only_commands=only_commands, only_agents=only_agents)
         display_success(f"Kiro steering sync complete: {written} written")
         return 0
 
     # Default: full replace (prune then copy)
+    only_commands = bool(getattr(args, "only_commands", False))
+    only_agents = bool(getattr(args, "only_agents", False))
     _prune_templates(dest)
-    written, skipped = _copy_templates(dest, force=True)
+    written, skipped = _copy_templates(dest, force=True, only_commands=only_commands, only_agents=only_agents)
     display_success(f"Kiro steering init complete: {written} written (existing managed files replaced)")
     return 0

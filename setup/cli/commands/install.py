@@ -49,6 +49,8 @@ Examples:
   SuperKiro install . --force                # Copy (and overwrite) .kiro/steering/super_kiro.md and .kiro/super_kiro/commands/*
   SuperKiro install . --prune                # Remove only SuperKiro-managed steering files
   SuperKiro install . --sync                 # Prune then copy latest templates (migrates legacy layout)
+  SuperKiro install . --only-commands        # Install command templates only (super_kiro.md included)
+  SuperKiro install . --only-agents          # Install agent persona templates only (super_kiro.md included)
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         parents=parents
@@ -75,6 +77,17 @@ Examples:
         action="store_true",
         help="List available components and exit"
     )
+    # Per-component directory overrides (relative to --install-dir unless absolute)
+    parser.add_argument(
+        "--commands-dir",
+        type=str,
+        help="Override commands install subdirectory (default: commands/sc)"
+    )
+    parser.add_argument(
+        "--agents-dir",
+        type=str,
+        help="Override agents install subdirectory (default: agents)"
+    )
     
     parser.add_argument(
         "--diagnose",
@@ -99,6 +112,17 @@ Examples:
         "--sync",
         action="store_true",
         help="Prune SuperKiro-managed templates then copy the latest templates"
+    )
+    # Pass-through selection for kiro-init
+    parser.add_argument(
+        "--only-commands",
+        action="store_true",
+        help="Install only command templates (.kiro/super_kiro/commands); super_kiro.md always included"
+    )
+    parser.add_argument(
+        "--only-agents",
+        action="store_true",
+        help="Install only agent persona templates (.kiro/steering/sk_*.md); super_kiro.md always included"
     )
 
     return parser
@@ -460,8 +484,24 @@ def perform_installation(components: List[str], args: argparse.Namespace, config
         registry = ComponentRegistry(PROJECT_ROOT / "setup" / "components")
         registry.discover_components()
         
-        # Create component instances
-        component_instances = registry.create_component_instances(components, args.install_dir)
+        # Create component instances for all known components so dependency resolution works
+        all_component_names = registry.list_components()
+        component_instances = registry.create_component_instances(all_component_names, args.install_dir)
+
+        # Apply per-component directory overrides
+        def _resolve_subdir(p: Optional[str]) -> Optional[Path]:
+            if not p:
+                return None
+            pp = Path(p)
+            return pp if pp.is_absolute() else (args.install_dir / pp)
+
+        commands_override = _resolve_subdir(getattr(args, 'commands_dir', None))
+        agents_override = _resolve_subdir(getattr(args, 'agents_dir', None))
+
+        if commands_override and 'commands' in component_instances:
+            component_instances['commands'].install_component_subdir = commands_override
+        if agents_override and 'agents' in component_instances:
+            component_instances['agents'].install_component_subdir = agents_override
         
         if not component_instances:
             logger.error("No valid component instances created")

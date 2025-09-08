@@ -1,16 +1,20 @@
 """
-SuperClaude CLI Base Module
+SuperKiro CLI Base Module
 
 Base class for all CLI operations providing common functionality
 """
 
 from pathlib import Path
 
-# Read version from VERSION file
+# Resolve version using SuperKiro package to avoid stale fallbacks
 try:
-    __version__ = (Path(__file__).parent.parent.parent / "VERSION").read_text().strip()
+    from SuperKiro import __version__  # type: ignore
 except Exception:
-    __version__ = "4.0.8"  # Fallback
+    # Fallback to repository VERSION file; last resort to 0.0.0
+    try:
+        __version__ = (Path(__file__).parent.parent.parent / "VERSION").read_text().strip()
+    except Exception:
+        __version__ = "0.0.0"
 
 
 def get_command_info():
@@ -18,22 +22,22 @@ def get_command_info():
     return {
         "install": {
             "name": "install",
-            "description": "Install SuperClaude framework components",
+            "description": "Install SuperKiro framework components",
             "module": "setup.cli.commands.install"
         },
         "update": {
             "name": "update", 
-            "description": "Update existing SuperClaude installation",
+            "description": "Update existing SuperKiro installation",
             "module": "setup.cli.commands.update"
         },
         "uninstall": {
             "name": "uninstall",
-            "description": "Remove SuperClaude framework installation", 
+            "description": "Remove SuperKiro framework installation", 
             "module": "setup.cli.commands.uninstall"
         },
         "backup": {
             "name": "backup",
-            "description": "Backup and restore SuperClaude installations",
+            "description": "Backup and restore SuperKiro installations",
             "module": "setup.cli.commands.backup"
         }
     }

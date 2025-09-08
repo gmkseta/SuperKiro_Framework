@@ -4,6 +4,14 @@
 
 **SuperClaude is a Context Framework for Claude Code** - it installs behavioral instruction files that Claude Code reads to enhance its capabilities.
 
+> Using with Kiro (TL;DR)
+> - Install templates: `superkiro kiro-init .`
+> - In Kiro chat, use `#sk_<name>` triggers (e.g., `#sk_document src/api --type api`)
+> - Every response MUST begin with:
+>   - `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+>   - `Applied flags: <flags>` (omit if none)
+> - Template layout: `.kiro/steering/super_kiro.md` and `.kiro/super_kiro/commands/*`
+
 ### How It Works
 1. **Installation**: Python CLI installs context files to `~/.claude/`
 2. **Commands**: Type `#sk_analyze` → Kiro reads the steering file and applies behavior

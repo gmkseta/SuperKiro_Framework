@@ -66,6 +66,14 @@
 
 SuperClaudeは**メタプログラミング設定フレームワーク**で、動作指示の注入とコンポーネント統制を通じて、Claude Codeを構造化開発プラットフォームに変換します。強力なツールとインテリジェントエージェントを備えたシステム化されたワークフロー自動化を提供します。
 
+> Kiroでの使い方（要点）
+> - プロジェクト内にテンプレートを配置：`superkiro kiro-init .`
+> - Kiroチャットで `#sk_<name>` を使用（例：`#sk_document src/api --type api`）
+> - すべての応答は次の2行で開始する必要があります：
+>   1) `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+>   2) `Applied flags: <flags>`（フラグがない場合は省略）
+> - テンプレート配置：`.kiro/steering/super_kiro.md` と `.kiro/super_kiro/commands/*`
+
 ## ⚡ **クイックインストール**
 
 ### **インストール方法を選択**

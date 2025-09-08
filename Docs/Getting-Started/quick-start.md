@@ -58,6 +58,14 @@
 
 **The Magic**: When you type `#sk_brainstorm`, Kiro reads steering files and responds with enhanced capabilities
 
+> Using with Kiro
+> 1) Install templates in your project: `superkiro kiro-init .`
+> 2) In Kiro chat, run `#sk_<name>` (e.g., `#sk_document src/api --type api`)
+> 3) Responses MUST start with:
+>    - `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+>    - `Applied flags: <flags>` (omit if none)
+> 4) Files live at `.kiro/steering/super_kiro.md` and `.kiro/super_kiro/commands/*`
+
 </div>
 
 ---

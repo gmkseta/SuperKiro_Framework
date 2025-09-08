@@ -78,7 +78,14 @@ class Component(ABC):
         if not has_perms:
             errors.append(f"No write permissions to {self.install_dir}: {missing}")
 
-        # Validate installation target
+        # Prepare target subdirectory (create parents if needed) before strict validation
+        try:
+            if not self.install_component_subdir.exists():
+                self.install_component_subdir.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            errors.append(f"Could not prepare install subdirectory {self.install_component_subdir}: {e}")
+
+        # Validate installation target (path and permissions)
         is_safe, validation_errors = SecurityValidator.validate_installation_target(self.install_component_subdir)
         if not is_safe:
             errors.extend(validation_errors)

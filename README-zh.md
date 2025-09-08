@@ -66,6 +66,14 @@
 
 SuperClaude是一个**元编程配置框架**，通过行为指令注入和组件编排，将Claude Code转换为结构化开发平台。它提供系统化的工作流自动化，配备强大的工具和智能代理。
 
+> 在 Kiro 中的使用（要点）
+> - 在项目内安装模板：`superkiro kiro-init .`
+> - 在 Kiro 聊天中使用 `#sk_<name>` 触发（例如：`#sk_document src/api --type api`）
+> - 每次响应必须以如下两行开头：
+>   1) `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+>   2) `Applied flags: <flags>`（无标志则省略）
+> - 模板布局：`.kiro/steering/super_kiro.md` 与 `.kiro/super_kiro/commands/*`
+
 ## ⚡ **快速安装**
 
 ### **选择您的安装方式**

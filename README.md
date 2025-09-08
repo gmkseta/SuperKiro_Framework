@@ -1,11 +1,11 @@
 <div align="center">
 
-# 🚀 SuperClaude Framework
+# 🚀 SuperKiro Framework
 
 ### **Transform Claude Code into a Structured Development Platform**
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-4.0.8-blue" alt="Version">
+  <img src="https://img.shields.io/badge/version-0.0.4-blue" alt="Version">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
@@ -63,7 +63,7 @@
 
 ## 🎯 **Overview**
 
-SuperClaude is a **meta-programming configuration framework** that transforms Claude Code into a structured development platform through behavioral instruction injection and component orchestration. It provides systematic workflow automation with powerful tools and intelligent agents.
+SuperKiro is a **meta-programming configuration framework** that transforms Claude Code into a structured development platform through behavioral instruction injection and component orchestration. It provides systematic workflow automation with powerful tools and intelligent agents.
 
 ## ⚡ **Quick Installation**
 
@@ -71,24 +71,83 @@ SuperClaude is a **meta-programming configuration framework** that transforms Cl
 
 | Method | Command | Best For |
 |:------:|---------|----------|
-| **🐍 pipx** | `pipx install SuperClaude && pipx upgrade SuperClaude && SuperClaude install` | **✅ Recommended** - Linux/macOS |
-| **📦 pip** | `pip install SuperClaude && pip upgrade SuperClaude && SuperClaude install` | Traditional Python environments |
+| **🐍 pipx** | `pipx install SuperKiro && pipx upgrade SuperKiro && SuperKiro install` | **✅ Recommended** - Linux/macOS |
+| **📦 pip** | `pip install SuperKiro && pip upgrade SuperKiro && SuperKiro install` | Traditional Python environments |
 | **🌐 npm** | `npm install -g @bifrost_inc/superclaude && superclaude install` | Cross-platform, Node.js users |
 
 </div>
 
+### Custom Install Directory
+
+- You can specify where framework files are installed using `--install-dir`.
+- Examples:
+  - `SuperKiro install --install-dir ~/mykiro`
+  - `SuperKiro update --install-dir ~/mykiro`
+  - `SuperKiro uninstall --install-dir ~/mykiro`
+- Default install directory: `~/.kiro`
+- Tip: Use the same `--install-dir` for install/update/uninstall to manage one location.
+
+### Directory Layout
+
+- Framework root (controlled by `--install-dir`, default `~/.kiro`):
+  - Core: `<install-dir>/*`
+  - Commands: `<install-dir>/commands/sc/*` (customize via `--commands-dir`)
+  - Agents: `<install-dir>/agents/*` (customize via `--agents-dir`)
+  - Modes: `<install-dir>/*` (mode files)
+  - Logs: `<install-dir>/logs/*`
+- Project steering (per project, installed via `kiro-init`):
+  - `.kiro/steering/super_kiro.md`
+  - `.kiro/steering/sk_*.md` (agent personas for `#<agent>` triggers)
+  - `.kiro/super_kiro/commands/sk_*.md` (slash-command steering)
+- Notes:
+  - `--install-dir` does not affect project steering. Use `SuperKiro kiro-init <project_dir>` (or `SuperKiro install <project_dir>`) to place steering files.
+  - Agent triggers use `.kiro/steering/sk_*.md` in your project, not `<install-dir>/agents/*`.
+
+### Per-Component Directories (Advanced)
+
+- Override where Commands/Agents live under the install root.
+- Install examples:
+  - `SuperKiro install --commands-dir commands/custom-sc`
+  - `SuperKiro install --agents-dir personas`
+  - `SuperKiro install --install-dir ~/mykiro --commands-dir commands/custom-sc --agents-dir personas`
+- Uninstall examples (use the same overrides to remove):
+  - `SuperKiro uninstall --components commands --install-dir ~/mykiro --commands-dir commands/custom-sc`
+  - `SuperKiro uninstall --components agents --install-dir ~/mykiro --agents-dir personas`
+- Notes:
+  - Relative paths resolve under `--install-dir`.
+  - Absolute paths are respected as-is (ensure permissions/safety).
+
+### Project vs Global
+
+- Project steering (per project):
+  - Install/update into a project folder using `SuperKiro kiro-init <target_dir>` (or `SuperKiro install <target_dir>`).
+  - Files live under `<target_dir>/.kiro/steering` and `<target_dir>/.kiro/super_kiro/commands` and are read by Kiro in that project.
+  - Not affected by `--install-dir`.
+- Global framework (user-level tools):
+  - Install/update/uninstall with `SuperKiro install|update|uninstall` and optional `--install-dir` (default `~/.kiro`).
+  - Components include core, commands, agents, modes, MCP docs.
+
+### Uninstall Behavior
+
+- In a project (when `./.kiro` exists):
+  - Just run `SuperKiro uninstall` to prune SuperKiro-managed steering files.
+  - You no longer need `--prune-steering --steering-target .`.
+- Global uninstall (user-level framework files):
+  - Specific components: `SuperKiro uninstall --components core commands agents` (plus `--install-dir` if customized).
+  - Complete removal: `SuperKiro uninstall --complete [--install-dir <dir>]`.
+
 <details>
 <summary><b>⚠️ IMPORTANT: Upgrading from SuperClaude V3</b></summary>
 
-**If you have SuperClaude V3 installed, you SHOULD uninstall it before installing V4:**
+**If you have SuperClaude V3 installed, you SHOULD uninstall it before installing SuperKiro:**
 
 ```bash
 # Uninstall V3 first
 Remove all related files and directories :
 *.md *.json and commands/
 
-# Then install V4
-pipx install SuperClaude && pipx upgrade SuperClaude && SuperClaude install
+# Then install
+pipx install SuperKiro && pipx upgrade SuperKiro && SuperKiro install
 ```
 
 **✅ What gets preserved during upgrade:**
@@ -106,13 +165,13 @@ pipx install SuperClaude && pipx upgrade SuperClaude && SuperClaude install
 
 ```bash
 # Option 1: Use pipx (Recommended)
-pipx install SuperClaude
+pipx install SuperKiro
 
 # Option 2: User installation
-pip install --user SuperClaude
+pip install --user SuperKiro
 
 # Option 3: Force installation (use with caution)
-pip install --break-system-packages SuperClaude
+pip install --break-system-packages SuperKiro
 ```
 </details>
 
@@ -263,7 +322,7 @@ pip install --break-system-packages SuperClaude
 
 ## 📚 **Documentation**
 
-### **Complete Guide to SuperClaude**
+### **Complete Guide to SuperKiro**
 
 <table>
 <tr>
@@ -338,7 +397,7 @@ pip install --break-system-packages SuperClaude
 
 ## 🤝 **Contributing**
 
-### **Join the SuperClaude Community**
+### **Join the SuperKiro Community**
 
 We welcome contributions of all kinds! Here's how you can help:
 
@@ -396,14 +455,14 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-### **🚀 Built with passion by the SuperClaude community**
+### **🚀 Built with passion by the SuperKiro community**
 
 <p align="center">
   <sub>Made with ❤️ for developers who push boundaries</sub>
 </p>
 
 <p align="center">
-  <a href="#-superclaude-framework">Back to Top ↑</a>
+  <a href="#-superkiro-framework">Back to Top ↑</a>
 </p>
 
 </div>

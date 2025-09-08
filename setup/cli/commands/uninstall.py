@@ -131,10 +131,11 @@ def register_parser(subparsers, global_parser=None) -> argparse.ArgumentParser:
     parser = subparsers.add_parser(
         "uninstall",
         help="Remove SuperKiro framework installation",
-        description="Uninstall SuperKiro Framework components",
+        description="Uninstall SuperKiro Framework components or prune project steering by default",
         epilog="""
 Examples:
-  SuperKiro uninstall                    # Interactive uninstall
+  SuperKiro uninstall                    # In a project: remove ./.kiro steering files (default)
+                                         # Outside a project: interactive uninstall of components
   SuperKiro uninstall --components core  # Remove specific components
   SuperKiro uninstall --complete --force # Complete removal (forced)
   SuperKiro uninstall --keep-backups     # Keep backup files
@@ -180,12 +181,12 @@ Examples:
     parser.add_argument(
         "--prune-steering",
         action="store_true",
-        help="Remove only SuperKiro-managed steering templates from a project (.kiro/steering). Preserves user files."
+        help="Remove only SuperKiro-managed steering files from a project (.kiro/steering/super_kiro.md and .kiro/super_kiro). Preserves user files."
     )
     parser.add_argument(
         "--steering-target",
         default=".",
-        help="Target project directory containing .kiro/steering (default: current directory)"
+        help="Target project directory containing .kiro steering (default: current directory)"
     )
     
     # Safety options
@@ -206,6 +207,17 @@ Examples:
         "--no-restore-script",
         action="store_true",
         help="Skip creating environment variable restore script"
+    )
+    # Per-component directory overrides (relative to --install-dir unless absolute)
+    parser.add_argument(
+        "--commands-dir",
+        type=str,
+        help="Override commands install subdirectory for removal (default: commands/sc)"
+    )
+    parser.add_argument(
+        "--agents-dir",
+        type=str,
+        help="Override agents install subdirectory for removal (default: agents)"
     )
     
     return parser
@@ -654,8 +666,24 @@ def perform_uninstall(components: List[str], args: argparse.Namespace, info: Dic
         registry = ComponentRegistry(PROJECT_ROOT / "setup" / "components")
         registry.discover_components()
         
-        # Create component instances
-        component_instances = registry.create_component_instances(components, args.install_dir)
+        # Create component instances (for all, to allow dependency-aware operations)
+        all_component_names = list(set(components))
+        component_instances = registry.create_component_instances(all_component_names, args.install_dir)
+
+        # Apply per-component directory overrides
+        def _resolve_subdir(p: Optional[str]) -> Optional[Path]:
+            if not p:
+                return None
+            pp = Path(p)
+            return pp if pp.is_absolute() else (args.install_dir / pp)
+
+        commands_override = _resolve_subdir(getattr(args, 'commands_dir', None))
+        agents_override = _resolve_subdir(getattr(args, 'agents_dir', None))
+
+        if commands_override and 'commands' in component_instances:
+            component_instances['commands'].install_component_subdir = commands_override
+        if agents_override and 'agents' in component_instances:
+            component_instances['agents'].install_component_subdir = agents_override
         
         # Setup progress tracking
         progress = ProgressBar(
@@ -784,14 +812,27 @@ def run(args: argparse.Namespace) -> int:
             from setup.cli.commands.kiro_init import _prune_templates
             target_root = Path(getattr(args, "steering_target", ".")).resolve()
             dest = target_root / ".kiro" / "steering"
-            if not dest.exists():
-                display_warning(f"No steering directory found at {dest}; nothing to prune")
-                return 0
             removed, preserved = _prune_templates(dest)
             display_success(f"Project steering prune complete: {removed} removed, {preserved} preserved (target: {dest})")
             return 0
         except Exception as e:
             display_error(f"Steering prune failed: {e}")
+            return 1
+
+    # Implicit project prune behavior: if running in a project (./.kiro exists) with no
+    # explicit component/complete options, prune steering files by default.
+    if not args.components and not args.complete:
+        try:
+            target_root = Path(getattr(args, "steering_target", ".")).resolve()
+            kiro_root = target_root / ".kiro"
+            if kiro_root.exists():
+                from setup.cli.commands.kiro_init import _prune_templates
+                dest = kiro_root / "steering"
+                removed, preserved = _prune_templates(dest)
+                display_success(f"Project steering removed: {removed} files (target: {kiro_root})")
+                return 0
+        except Exception as e:
+            display_error(f"Implicit project prune failed: {e}")
             return 1
     # ✅ Inserted validation code
     expected_home = Path.home().resolve()

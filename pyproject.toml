@@ -11,7 +11,8 @@ authors = [
 ]
 description = "SuperKiro Framework Management Hub - AI-enhanced development framework for Kiro-compatible workflows"
 readme = "README.md"
-license = "MIT"
+# PEP 621: license must be an object with either {file=...} or {text=...}
+license = { text = "MIT" }
 requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 4 - Beta",

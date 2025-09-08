@@ -1,5 +1,12 @@
 # SuperClaude Commands Guide
 
+> Kiro usage note
+> - In Kiro chat, prefer `#sk_<name>` triggers (e.g., `#sk_analyze`, `#sk_document`).
+> - Ensure your project has templates installed: `superkiro kiro-init .` → creates `.kiro/steering/super_kiro.md` and `.kiro/super_kiro/commands/*`.
+> - Every response MUST open with:
+>   - `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+>   - `Applied flags: <flags>` (omit if none)
+
 SuperClaude provides 22 commands for Claude Code: `/sc:*` commands for workflows and `@agent-*` for specialists.
 
 ## Command Types

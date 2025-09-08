@@ -75,8 +75,8 @@ class CommandsComponent(Component):
         try:
             self.logger.info("Uninstalling SuperClaude commands component...")
             
-            # Remove command files from sc subdirectory
-            commands_dir = self.install_dir / "commands" / "sc"
+            # Remove command files from configured subdirectory
+            commands_dir = self.install_component_subdir
             removed_count = 0
             
             for filename in self.component_files:
@@ -87,7 +87,7 @@ class CommandsComponent(Component):
                 else:
                     self.logger.warning(f"Could not remove {filename}")
             
-            # Also check and remove any old commands in root commands directory
+            # Also check and remove any old commands in legacy location
             old_commands_dir = self.install_dir / "commands"
             old_removed_count = 0
             
@@ -105,15 +105,15 @@ class CommandsComponent(Component):
             
             removed_count += old_removed_count
             
-            # Remove sc subdirectory if empty
+            # Remove subdirectory if empty
             try:
                 if commands_dir.exists():
                     remaining_files = list(commands_dir.iterdir())
                     if not remaining_files:
                         commands_dir.rmdir()
-                        self.logger.debug("Removed empty sc commands directory")
+                        self.logger.debug("Removed empty commands directory")
                         
-                        # Also remove parent commands directory if empty
+                        # Also remove parent commands directory if empty (legacy layout)
                         parent_commands_dir = self.install_dir / "commands"
                         if parent_commands_dir.exists():
                             remaining_files = list(parent_commands_dir.iterdir())
@@ -163,7 +163,7 @@ class CommandsComponent(Component):
             self.logger.info(f"Updating commands component from {current_version} to {target_version}")
             
             # Create backup of existing command files
-            commands_dir = self.install_dir / "commands" / "sc"
+            commands_dir = self.install_component_subdir
             backup_files = []
             
             if commands_dir.exists():
@@ -208,8 +208,8 @@ class CommandsComponent(Component):
         """Validate commands component installation"""
         errors = []
         
-        # Check if sc commands directory exists
-        commands_dir = self.install_dir / "commands" / "sc"
+        # Check if commands directory exists
+        commands_dir = self.install_component_subdir
         if not commands_dir.exists():
             errors.append("SC commands directory not found")
             return False, errors

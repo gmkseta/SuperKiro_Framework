@@ -346,6 +346,64 @@ pip uninstall SuperClaude
 
 ---
 
+## 📂 Custom Install Directory
+
+You can choose where SuperKiro stores its framework files using `--install-dir`.
+
+```bash
+# Install into a custom directory
+SuperKiro install --install-dir ~/mykiro
+
+# Update the same installation later
+SuperKiro update --install-dir ~/mykiro
+
+# Uninstall from that location
+SuperKiro uninstall --install-dir ~/mykiro
+```
+
+- Default install directory: `~/.kiro`
+- Use the same `--install-dir` for install/update/uninstall to manage the same location.
+
+### Per-Component Directories
+
+You can override where specific components are stored under the install directory.
+
+```bash
+# Install commands under a custom subdirectory
+SuperKiro install --commands-dir commands/custom-sc
+
+# Install agents under a custom subdirectory
+SuperKiro install --agents-dir custom-agents
+
+# Combine with a custom install root
+SuperKiro install --install-dir ~/mykiro --commands-dir commands/custom-sc --agents-dir personas
+```
+
+- Relative paths are resolved under `--install-dir`.
+- Absolute paths are respected as-is (advanced; ensure permissions and safety).
+
+Uninstall from customized locations by passing the same overrides:
+
+```bash
+SuperKiro uninstall --components commands --install-dir ~/mykiro --commands-dir commands/custom-sc
+SuperKiro uninstall --components agents --install-dir ~/mykiro --agents-dir personas
+```
+
+## 🗑️ Project Steering Prune (Default)
+
+When you are in a project that contains a `./.kiro` folder, running:
+
+```bash
+SuperKiro uninstall
+```
+
+will prune SuperKiro-managed steering files in the current project:
+
+- Removes `.kiro/steering/super_kiro.md`
+- Removes `.kiro/super_kiro/commands/*.md`
+
+You no longer need to use `--prune-steering --steering-target .` for this common case.
+
 ## 🔧 **Troubleshooting**
 
 <details>

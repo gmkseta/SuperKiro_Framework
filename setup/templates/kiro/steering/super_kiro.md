@@ -18,6 +18,7 @@ This project organizes steering as:
   - Mapping: `#sk_<name>` selects the corresponding command behavior
   - Tokenization: split on spaces; support quoted segments ("...") for paths with spaces.
   - Behavior: Treat the remainder of the message as arguments to the steering behavior.
+  - Agents: use plain `#<agent_name>` (e.g., `#security_engineer`) to select persona files under `.kiro/steering/`.
 - Flags announcement: If global flags are present (e.g., `--ultrathink`), announce them immediately after the consulted line, e.g., `Applied flags: --ultrathink`.
 
 ## Mandatory Output Header
@@ -100,3 +101,22 @@ Quick links to command templates (paths are relative to workspace root):
 - test → `.kiro/super_kiro/commands/sk_test.md`
 - troubleshoot → `.kiro/super_kiro/commands/sk_troubleshoot.md`
 - workflow → `.kiro/super_kiro/commands/sk_workflow.md`
+
+## Agents Index (Manual `#<agent>` Triggers)
+
+These persona templates live directly under `.kiro/steering/` and are triggered manually via `#<agent>` in Kiro chat. Responses MUST begin with `Consulted: <path>` and optional `Applied flags:` line.
+
+- `#security_engineer` → `.kiro/steering/sk_security_engineer.md`
+- `#backend_architect` → `.kiro/steering/sk_backend_architect.md`
+- `#system_architect` → `.kiro/steering/sk_system_architect.md`
+- `#frontend_architect` → `.kiro/steering/sk_frontend_architect.md`
+- `#devops_architect` → `.kiro/steering/sk_devops_architect.md`
+- `#quality_engineer` → `.kiro/steering/sk_quality_engineer.md`
+- `#performance_engineer` → `.kiro/steering/sk_performance_engineer.md`
+- `#python_expert` → `.kiro/steering/sk_python_expert.md`
+- `#refactoring_expert` → `.kiro/steering/sk_refactoring_expert.md`
+- `#requirements_analyst` → `.kiro/steering/sk_requirements_analyst.md`
+- `#root_cause_analyst` → `.kiro/steering/sk_root_cause_analyst.md`
+- `#technical_writer` → `.kiro/steering/sk_technical_writer.md`
+- `#learning_guide` → `.kiro/steering/sk_learning_guide.md`
+- `#socratic_mentor` → `.kiro/steering/sk_socratic_mentor.md`
