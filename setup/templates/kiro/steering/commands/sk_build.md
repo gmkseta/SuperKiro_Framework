@@ -13,6 +13,10 @@ mcp-servers: [playwright]
 personas: [devops-engineer]
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_build.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_build - Project Building and Packaging
 
 ## Triggers

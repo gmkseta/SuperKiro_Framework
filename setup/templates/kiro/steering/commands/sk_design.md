@@ -13,6 +13,10 @@ mcp-servers: []
 personas: []
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_design.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_design - System and Component Design
 
 ## Triggers

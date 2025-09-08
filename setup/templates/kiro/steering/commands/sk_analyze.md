@@ -13,6 +13,10 @@ mcp-servers: []
 personas: []
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_analyze.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_analyze - Code Analysis and Quality Assessment
 
 ## Triggers

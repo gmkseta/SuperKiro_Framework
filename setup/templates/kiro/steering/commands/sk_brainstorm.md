@@ -13,6 +13,10 @@ mcp-servers: [sequential, context7, magic, playwright, morphllm, serena]
 personas: [architect, analyzer, frontend, backend, security, devops, project-manager]
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_brainstorm.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_brainstorm - Interactive Requirements Discovery
 
 > Note: This file provides behavioral instructions for Kiro when users type `#sk_brainstorm` patterns or target this file directly.

@@ -13,6 +13,10 @@ mcp-servers: []
 personas: []
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_document.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_document - Focused Documentation Generation
 
 ## Triggers

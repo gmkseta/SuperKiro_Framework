@@ -6,6 +6,10 @@ inclusion: manual
 
 # #sk_business_panel - Business Panel Analysis System
 
+Mandatory Output Header:
+- First line: `Consulted: .kiro/super_kiro/commands/sk_business_panel.md`
+- Optional second line: `Applied flags: <flags>`
+
 ```yaml
 ---
 command: "#sk_business_panel"

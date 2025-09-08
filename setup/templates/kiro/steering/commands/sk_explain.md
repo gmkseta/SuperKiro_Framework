@@ -13,6 +13,10 @@ mcp-servers: [sequential, context7]
 personas: [educator, architect, security]
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_explain.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_explain - Code and Concept Explanation
 
 ## Triggers

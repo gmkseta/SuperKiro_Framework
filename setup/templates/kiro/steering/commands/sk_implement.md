@@ -13,6 +13,10 @@ mcp-servers: [context7, sequential, magic, playwright]
 personas: [architect, frontend, backend, security, qa-specialist]
 ---
 
+# Mandatory Output Header
+- First line: `Consulted: .kiro/super_kiro/commands/sk_implement.md`
+- Optional second line: `Applied flags: <flags>`
+
 # #sk_implement - Feature Implementation
 
 > Note: Kiro usage supports file targeting and `#sk_implement` hashtag.
