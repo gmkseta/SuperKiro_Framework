@@ -21,6 +21,24 @@ This project organizes steering as:
   - Agents: use plain `#<agent_name>` (e.g., `#security_engineer`) to select persona files under `.kiro/steering/`.
 - Flags announcement: If global flags are present (e.g., `--ultrathink`), announce them immediately after the consulted line, e.g., `Applied flags: --ultrathink`.
 
+## CRITICAL EXECUTION PROTOCOL
+
+**BEFORE outputting the header, you MUST:**
+1. **FIRST** read the actual command file `.kiro/super_kiro/commands/sk_<name>.md`
+2. **THEN** output the mandatory header
+3. **THEN** follow the instructions in that command file
+
+**DO NOT:**
+- Output the header without reading the command file first
+- Assume what the command file contains
+- Skip reading the command file and proceed with generic behavior
+
+**VERIFICATION STEPS:**
+1. Parse the `#sk_<name>` command from user input
+2. Use readFile tool to read `.kiro/super_kiro/commands/sk_<name>.md`
+3. Output the mandatory header with correct command name
+4. Follow the specific behavioral flow and patterns defined in that command file
+
 ## Strict Command Resolution & Execution Protocol
 
 When a `#sk_<name>` command is invoked, follow this protocol exactly, before any reasoning or action:

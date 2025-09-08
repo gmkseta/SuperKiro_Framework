@@ -819,13 +819,19 @@ def run(args: argparse.Namespace) -> int:
             display_error(f"Steering prune failed: {e}")
             return 1
 
-    # Implicit project prune behavior: if running in a project (./.kiro exists) with no
-    # explicit component/complete options, prune steering files by default.
+    # Implicit project prune behavior: if running in a project with a .kiro directory
+    # (in current or any parent) and no explicit component/complete options, prune steering files.
     if not args.components and not args.complete:
         try:
             target_root = Path(getattr(args, "steering_target", ".")).resolve()
-            kiro_root = target_root / ".kiro"
-            if kiro_root.exists():
+            # Find nearest ancestor containing .kiro
+            search = target_root
+            kiro_root = None
+            for parent in [search] + list(search.parents):
+                if (parent / ".kiro").exists():
+                    kiro_root = parent / ".kiro"
+                    break
+            if kiro_root is not None:
                 from setup.cli.commands.kiro_init import _prune_templates
                 dest = kiro_root / "steering"
                 removed, preserved = _prune_templates(dest)
