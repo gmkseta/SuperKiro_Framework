@@ -21,14 +21,31 @@ This project organizes steering as:
   - Agents: use plain `#<agent_name>` (e.g., `#security_engineer`) to select persona files under `.kiro/steering/`.
 - Flags announcement: If global flags are present (e.g., `--ultrathink`), announce them immediately after the consulted line, e.g., `Applied flags: --ultrathink`.
 
-## Mandatory Output Header
+## Strict Command Resolution & Execution Protocol
 
-To prove the steering file was actually consulted, every response that uses a `#sk_<name>` command MUST begin with:
+When a `#sk_<name>` command is invoked, follow this protocol exactly, before any reasoning or action:
 
-1. `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
-2. If any flags were provided, the next line: `Applied flags: <flags>` (omit if none)
+1) Resolve path
+- Construct: `.kiro/super_kiro/commands/sk_<name>.md` relative to the current project root.
+- Do not search other locations (do not use global install dir). No fallbacks.
 
-The `<name>` must match the invoked command (e.g., `document`, `analyze`, `implement`). Do not paraphrase or alter these two lines.
+2) Load file
+- If the file exists, read its entire contents first. Do not begin analysis or produce output before loading the file.
+- If missing, stop and print: `Consulted: .kiro/super_kiro/commands/sk_<name>.md (NOT FOUND)` and a one‑line reason; suggest `SuperKiro kiro-init . --sync`.
+
+3) Announce consultation
+- Start the response with these exact lines:
+  - `Consulted: .kiro/super_kiro/commands/sk_<name>.md`
+  - `Applied flags: <flags>` (include only if flags are present)
+
+4) Execute as specified
+- Treat the loaded file as authoritative for behavior, tools, scope, and boundaries. Apply its sections (Usage, Behavioral Flow, Tool Coordination, Key Patterns, Examples) exactly.
+- Parse `#sk_<name> ...args` into flags/params as documented by that file. Do not infer undocumented behaviors.
+- Respect all “Will/Will Not” constraints from the file.
+
+5) Safety & precedence
+- Framework rules in this overview apply unless the command file explicitly overrides them.
+- Never invent, relocate, or silently ignore the command path. If anything is ambiguous, ask a concise clarification question before proceeding.
 
 ## Command Files
 
@@ -105,6 +122,10 @@ Quick links to command templates (paths are relative to workspace root):
 ## Agents Index (Manual `#<agent>` Triggers)
 
 These persona templates live directly under `.kiro/steering/` and are triggered manually via `#<agent>` in Kiro chat. Responses MUST begin with `Consulted: <path>` and optional `Applied flags:` line.
+
+Strict Agent Resolution:
+- For `#<agent>`, resolve and read `.kiro/steering/sk_<agent>.md` before any output.
+- If missing, print `Consulted: .kiro/steering/sk_<agent>.md (NOT FOUND)` and suggest `SuperKiro kiro-init . --only-agents`.
 
 - `#security_engineer` → `.kiro/steering/sk_security_engineer.md`
 - `#backend_architect` → `.kiro/steering/sk_backend_architect.md`
