@@ -824,19 +824,13 @@ def run(args: argparse.Namespace) -> int:
     if not args.components and not args.complete:
         try:
             target_root = Path(getattr(args, "steering_target", ".")).resolve()
-            # Find nearest ancestor containing .kiro
-            search = target_root
-            kiro_root = None
-            for parent in [search] + list(search.parents):
-                if (parent / ".kiro").exists():
-                    kiro_root = parent / ".kiro"
-                    break
-            if kiro_root is not None:
-                from setup.cli.commands.kiro_init import _prune_templates
-                dest = kiro_root / "steering"
-                removed, preserved = _prune_templates(dest)
-                display_success(f"Project steering removed: {removed} files (target: {kiro_root})")
-                return 0
+            # Default to current directory target, even if ./.kiro is missing (match explicit --prune-steering behavior)
+            from setup.cli.commands.kiro_init import _prune_templates
+            kiro_root = target_root / ".kiro"
+            dest = kiro_root / "steering"
+            removed, preserved = _prune_templates(dest)
+            display_success(f"Project steering removed: {removed} files (target: {kiro_root})")
+            return 0
         except Exception as e:
             display_error(f"Implicit project prune failed: {e}")
             return 1
@@ -860,9 +854,9 @@ def run(args: argparse.Namespace) -> int:
         
         # Display header
         if not args.quiet:
-            from setup.cli.base import __version__
+            # Avoid ambiguous version display; show operation title only
             display_header(
-                f"SuperKiro Uninstall v{__version__}",
+                "SuperKiro Uninstall",
                 "Removing SuperKiro framework components"
             )
         
