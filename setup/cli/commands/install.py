@@ -576,20 +576,29 @@ def run(args: argparse.Namespace) -> int:
     operation.setup_operation_logging(args)
     logger = get_logger()
 
-    # Alias branch: if steering maintenance flags are provided, delegate to kiro-init
-    if getattr(args, "prune", False) or getattr(args, "sync", False):
+    # Alias branch: if target_dir is provided or steering maintenance flags are provided, delegate to kiro-init
+    target_dir = getattr(args, "target_dir", None)
+    has_steering_flags = getattr(args, "prune", False) or getattr(args, "sync", False)
+    has_template_flags = getattr(args, "only_commands", False) or getattr(args, "only_agents", False)
+    
+    # If target_dir is provided (even if "."), delegate to kiro-init
+    if target_dir is not None or has_steering_flags or has_template_flags:
         try:
             from setup.cli.commands import kiro_init as _kiro_init
             # Build a minimal namespace for kiro-init
             class _NS:
                 pass
             ns = _NS()
-            setattr(ns, 'target_dir', getattr(args, 'target_dir', '.'))
+            setattr(ns, 'target_dir', target_dir or '.')
             setattr(ns, 'force', getattr(args, 'force', False))
             setattr(ns, 'prune', getattr(args, 'prune', False))
             setattr(ns, 'sync', getattr(args, 'sync', False))
+            setattr(ns, 'only_commands', getattr(args, 'only_commands', False))
+            setattr(ns, 'only_agents', getattr(args, 'only_agents', False))
             setattr(ns, 'quiet', getattr(args, 'quiet', False))
             setattr(ns, 'dry_run', getattr(args, 'dry_run', False))
+            setattr(ns, 'verbose', getattr(args, 'verbose', False))
+            setattr(ns, 'install_dir', getattr(args, 'install_dir', None))
             return _kiro_init.run(ns)
         except Exception as e:
             logger.exception(f"Failed to delegate to kiro-init: {e}")
